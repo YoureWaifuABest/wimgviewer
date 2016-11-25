@@ -55,9 +55,6 @@ int main(int argc, char **argv)
 	 */
 	lslen = i-1;
 
-	for (i = 0; i != lslen; ++i)
-		printf("%s\n", ls[i]);
-
 	SDL_Init(SDL_INIT_VIDEO);
 
 	if (argc < 2) {
