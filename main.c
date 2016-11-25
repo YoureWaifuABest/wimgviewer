@@ -55,8 +55,6 @@ int main(int argc, char **argv)
 	 */
 	lslen = i-1;
 
-	SDL_Init(SDL_INIT_VIDEO);
-
 	if (argc < 2) {
 		printf("Error: arg should be image\n");
 		return -1;
@@ -68,16 +66,24 @@ int main(int argc, char **argv)
 	 * via <- and ->. 
 	 * Loop until argv[1] equals ls[i]
 	 * Stop if argv[1] is not present in ls
+	 * 
+	 * The printf part is also necessary. I have no idea why.
+	 * Try using the program without it. It won't work.
+	 *
+	 * It seems the act of printing it makes it exist, or something like that.
+	 * Absolutely no idea why.
 	 */
 	for (i = 0; strcmp(argv[1], ls[i]) && i != lslen; ++i)
-		;
+		printf("%s\n", ls[i]);
+
+	SDL_Init(SDL_INIT_VIDEO);
 
 	/* 
 	 * Load whatever file argv[1] refers to into image
 	 * See SDL2_image's docs.
 	 */
 	image = IMG_Load(argv[1]);
-	/* Sets all variables to null (to stop Wall's complaints */
+	/* Sets all variables to null (to stop Wall's complaints) */
 	renderer = NULL;
 	texture  = NULL;
 	screen   = NULL;
