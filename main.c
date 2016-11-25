@@ -27,8 +27,14 @@ int main(int argc, char **argv)
 	 * We only want the values before the final slash (the directory).
 	 */
 	strcpy(arghold, argv[1]);
-	pch = strrchr(arghold, '/');
-	*(pch+1) = '\0';
+	if (strchr(arghold, '/')) {
+		pch = strrchr(arghold, '/');
+		*(pch+1) = '\0';
+	} else {
+		arghold[0] = '.';
+		arghold[1] = '/';
+		arghold[2] = '\0';
+	}
 
 	/* 
 	 * Set up an array which contains all of the files
