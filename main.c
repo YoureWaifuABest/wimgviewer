@@ -11,11 +11,24 @@ int main(int argc, char **argv)
 	SDL_Surface *image;
 	SDL_Texture *texture;
 	SDL_Event event;
-	char *ls[1000];
+	char ls[1000][1000], arghold[500], *pch;
 	int done, i, lslen;
 	Uint32 current;
 
 	done = i = 0;
+
+	/*
+	 * Copy argv[1] into arghold so as to not modify
+	 * argv[1].
+	 *
+	 * Set pch to point to the location of '/' in arghold,
+	 * and replace that value with '\0', cutting off the string.
+	 * 
+	 * We only want the values before the final slash (the directory).
+	 */
+	strcpy(arghold, argv[1]);
+	pch = strrchr(arghold, '/');
+	*(pch+1) = '\0';
 
 	/* 
 	 * Set up an array which contains all of the files
@@ -28,18 +41,21 @@ int main(int argc, char **argv)
 	DIR *dir;
 	struct dirent *ent;
 	/* Check if the directory exists */
-	if ((dir = opendir("./")) != NULL) {
+	if ((dir = opendir(arghold)) != NULL) {
 		/* While there are files in the directory */
 		while ((ent = readdir(dir)) != NULL) {
 			/* Read the files into an array if they are images */
 			if (strstr(ent->d_name, ".png") != NULL) {
-				ls[i] = ent->d_name;
+				strcpy(ls[i], arghold);
+				strcat(ls[i], ent->d_name);
 				++i;
 			} else if (strstr(ent->d_name, ".jpg") != NULL) {
-				ls[i] = ent->d_name;
+				strcpy(ls[i], arghold);
+				strcat(ls[i], ent->d_name);
 				++i;
 			} else if (strstr(ent->d_name, ".gif") != NULL) {
-				ls[i] = ent->d_name;
+				strcpy(ls[i], arghold);
+				strcat(ls[i], ent->d_name);
 				++i;
 			}
 		}
@@ -67,15 +83,9 @@ int main(int argc, char **argv)
 	 * via <- and ->. 
 	 * Loop until argv[1] equals ls[i]
 	 * Stop if argv[1] is not present in ls
-	 * 
-	 * The printf part is also necessary. I have no idea why.
-	 * Try using the program without it. It won't work.
-	 *
-	 * It seems the act of printing it makes it exist, or something like that.
-	 * Absolutely no idea why.
 	 */
 	for (i = 0; strcmp(argv[1], ls[i]) && i != lslen; ++i)
-		printf("%s\n", ls[i]);
+		;
 
 	SDL_Init(SDL_INIT_VIDEO);
 
