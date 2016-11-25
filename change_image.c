@@ -1,45 +1,9 @@
 #include "head.h"
-//#include "math.c"
-
-struct asprat {
-	unsigned int x;
-	unsigned int y;
-} aspect_ratio;
-
-unsigned int gcd(unsigned int u, unsigned int v)
-{
-	/* simple cases (termination) */
-	if (u == v)
-		return u;
-	if (u == 0)
-		return v;
-	if (v == 0)
-		return u;
-	
-	/* look for factors of 2 */
-	if (~u & 1) // u is even
-	{
-		if (v & 1) // v is odd
-			return gcd(u >> 1, v);
-		else // both u and v are even
-			return gcd(u >> 1, v >> 1) << 1;
-	}
-	
-	if (~v & 1) // u is odd, v is even
-		return gcd(u, v >> 1);
-	
-	// reduce larger argument
-	if (u > v)
-		return gcd((u - v) >> 1, v);
-	
-	return gcd((v - u) >> 1, u);
-}
 
 Uint32 change_image(SDL_Window *screen, SDL_Renderer *renderer,
                  SDL_Surface *image, SDL_Texture *texture,
 								 char *name) 
 {
-	unsigned int gcds;
 	SDL_Rect srcrect;
 	SDL_Rect dstrect;
 
@@ -48,15 +12,22 @@ Uint32 change_image(SDL_Window *screen, SDL_Renderer *renderer,
 		exit(1);
 	}
 
-	gcds = gcd(image->h, image->w);
-	aspect_ratio.x = (image->w)/gcds;
-	aspect_ratio.y = (image->h)/gcds;
-
+	/* Define srcrect with properties of image */
 	srcrect.x = 0;
 	srcrect.y = 0;
 	srcrect.w = image->w;
 	srcrect.h = image->h;
 
+	/* 
+	 * Define dstrect, change as necessary.
+	 * 
+	 * This is to scale the image to be smaller than one's monitor.
+	 *
+	 * I could make a config for this instead of hard coding it, but
+	 * I don't have any monitor that's larger than this res, and
+	 * I'm the only one who will ever even consider using this program
+	 * so I'm not going to.
+	 */
 	dstrect.x = 0;
 	dstrect.y = 0;
 	if (image->w >= 1920) {
