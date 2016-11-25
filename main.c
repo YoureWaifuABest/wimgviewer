@@ -1,7 +1,7 @@
 #include "head.h"
 #include "change_image.c"
 
-int change_image(SDL_Window*, SDL_Renderer*,
+Uint32 change_image(SDL_Window*, SDL_Renderer*,
                  SDL_Surface*, SDL_Texture*, char *);
 
 int main(int argc, char **argv)
@@ -13,6 +13,7 @@ int main(int argc, char **argv)
 	SDL_Event event;
 	char *ls[1000];
 	int done, i, lslen;
+	Uint32 current;
 
 	done = i = 0;
 
@@ -87,11 +88,12 @@ int main(int argc, char **argv)
 	renderer = NULL;
 	texture  = NULL;
 	screen   = NULL;
-	change_image(screen, renderer, image, texture, argv[1]);
-	
+	current = change_image(screen, renderer, image, texture, argv[1]);
+
 	/* Gets events from SDL while done is = 0 */
 	while (!done && SDL_WaitEvent(&event)!=-1)
 	{
+		//SDL_DestroyWindow(current);
 		switch(event.type)
 		{
 			/* 
@@ -99,7 +101,7 @@ int main(int argc, char **argv)
 			 * if the press is an escape, right, or left.
 			 * Otherwise breaks.
 			 */
-			case SDL_KEYDOWN:
+			case SDL_KEYUP:
 				switch(event.key.keysym.sym)
 				{
 					case SDLK_ESCAPE:
@@ -107,42 +109,31 @@ int main(int argc, char **argv)
 						break;
 					case SDLK_RIGHT:
 						if (i < lslen) {
-							/* 
-							 * Quits the entire SDL session and starts a new one in
-							 * order to change the image.
-							 * This results in screen flickering and other dumb stuff.
-							 * It goes without saying that there's definitely a better
-							 * way to do this.
-							 */
-							SDL_Quit();
+							SDL_DestroyWindow(SDL_GetWindowFromID(current));	
 
-							SDL_Init(SDL_INIT_VIDEO);
 							image = IMG_Load(ls[++i]);
-							change_image(screen, renderer, image, texture, ls[i]);
+							current = change_image(screen, renderer, image, texture, ls[i]);
 						} else {
 							i = 0;
-							SDL_Quit();
+							SDL_DestroyWindow(SDL_GetWindowFromID(current));
 
-							SDL_Init(SDL_INIT_VIDEO);
 							image = IMG_Load(ls[i]);
-							change_image(screen, renderer, image, texture, ls[i]);
+							current = change_image(screen, renderer, image, texture, ls[i]);
 						}
 						break;
 					case SDLK_LEFT:
 						if (i != 0) {
-							SDL_Quit();
+							SDL_DestroyWindow(SDL_GetWindowFromID(current));
 
-							SDL_Init(SDL_INIT_VIDEO);
 							image = IMG_Load(ls[--i]);
-							change_image(screen, renderer, image, texture, ls[i]);
+							current = change_image(screen, renderer, image, texture, ls[i]);
 						}
 						else {
 							i = lslen;
-							SDL_Quit();
+							SDL_DestroyWindow(SDL_GetWindowFromID(current));
 
-							SDL_Init(SDL_INIT_VIDEO);
 							image = IMG_Load(ls[i]);
-							change_image(screen, renderer, image, texture, ls[i]);
+							current = change_image(screen, renderer, image, texture, ls[i]);
 						}
 						break;
 					default:

@@ -1,6 +1,6 @@
 #include "head.h"
 
-int change_image(SDL_Window *screen, SDL_Renderer *renderer,
+Uint32 change_image(SDL_Window *screen, SDL_Renderer *renderer,
                  SDL_Surface *image, SDL_Texture *texture,
 								 char *name) 
 {
@@ -36,6 +36,6 @@ int change_image(SDL_Window *screen, SDL_Renderer *renderer,
 	SDL_RenderClear(renderer);
 	SDL_RenderCopy(renderer, texture, NULL, NULL);
 	SDL_RenderPresent(renderer);	
-
-	return 0;
+	
+	return SDL_GetWindowID(screen);
 }
