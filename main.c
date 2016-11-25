@@ -104,6 +104,13 @@ int main(int argc, char **argv)
 						break;
 					case SDLK_RIGHT:
 						if (i < lslen) {
+							/* 
+							 * Quits the entire SDL session and starts a new one in
+							 * order to change the image.
+							 * This results in screen flickering and other dumb stuff.
+							 * It goes without saying that there's definitely a better
+							 * way to do this.
+							 */
 							SDL_Quit();
 
 							SDL_Init(SDL_INIT_VIDEO);
