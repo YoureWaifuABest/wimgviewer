@@ -2,7 +2,7 @@
 #include "change_image.c"
 
 Uint32 change_image(SDL_Window*, SDL_Renderer*,
-                 SDL_Surface*, SDL_Texture*, char *);
+                    SDL_Surface*, SDL_Texture*, char *);
 
 int main(int argc, char **argv)
 {
